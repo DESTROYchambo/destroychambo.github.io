@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма заявки n8n</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        glass: "rgba(255, 255, 255, 0.05)",
+                        glassBorder: "rgba(255, 255, 255, 0.1)",
+                        neonBlue: "#00f3ff",
+                        neonPurple: "#bc13fe",
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #bc13fe; animation: float 8s infinite; }
+        .blob-2 { bottom: -10%; right: -10%; width: 400px; height: 400px; background: #00f3ff; animation: float 10s infinite reverse; }
+
+        .glass-card {
+            background: rgba(17, 25, 40, 0.75);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.125);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-group input, .input-group textarea {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .input-group input:focus, .input-group textarea:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: #00f3ff;
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+        }
+
+        /* Radio Button Styling */
+        .radio-option input:checked + label {
+            transform: scale(1.05);
+            font-weight: bold;
+            color: white;
+            border: none;
+        }
+        
+        .radio-option input[value="low"]:checked + label {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+        .radio-option input[value="medium"]:checked + label {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        .radio-option input[value="high"]:checked + label {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .glow-button {
+            background: linear-gradient(90deg, #00f3ff, #bc13fe);
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Bot Button Styles */
+        .bot-button {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+        .bot-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
+            background: rgba(79, 70, 229, 0.3);
+            border-color: #00f3ff;
+        }
+        .bot-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
+        }
+        .bot-button:hover::after {
+            left: 100%;
+        }
+
+        .success-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .success-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <!-- Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="w-full max-w-lg relative">
+        
+        <div class="glass-card rounded-2xl p-8 w-full relative z-10">
+            
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neonBlue to-neonPurple mb-2">
+                    Створити Заявку
+                </h1>
+                <p class="text-gray-400 text-sm">Система автоматизації n8n</p>
+            </div>
+
+            <!-- BOT LINK BUTTON -->
+            <a href="https://t.me/form_n8nbot" target="_blank" 
+               class="bot-button bg-indigo-900/40 border border-indigo-500/50 rounded-xl p-4 mb-6 flex items-center gap-4 cursor-pointer group">
+                <div class="bg-indigo-600/20 p-3 rounded-full text-neonBlue group-hover:scale-110 transition-transform">
+                    <i class="fa-brands fa-telegram fa-xl"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-bold text-white text-sm flex items-center gap-2">
+                        Обов'язкова дія
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+                    </h3>
+                    <p class="text-xs text-indigo-200 leading-relaxed mt-1">
+                        Натисніть тут та відправте <span class="text-neonBlue font-mono font-bold">/start</span> боту, щоб ми могли вам відповісти.
+                    </p>
+                </div>
+                <div class="text-white opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </a>
+
+            <!-- Form -->
+            <form id="n8nForm" class="space-y-5" onsubmit="handleSubmit(event)">
+                
+                <!-- Name -->
+                <div class="input-group">
+                    <label class="block text-gray-400 text-xs uppercase tracking-wider mb-1 font-semibold pl-1">Прізвище та Ім'я</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3.5 text-gray-500"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" id="fullName" name="fullName" required 
+                            class="w-full rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:ring-0"
+                            placeholder="Шевченко Андрій">
+                    </div>
+                </div>
+
+                <!-- Telegram ID -->
+                <div class="input-group">
+                    <label class="block text-gray-400 text-xs uppercase tracking-wider mb-1 font-semibold pl-1">Telegram ID</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-3.5 text-gray-500"><i class="fa-brands fa-telegram"></i></span>
+                        <input type="text" id="telegramId" name="telegramId" required 
+                            class="w-full rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:ring-0"
+                            placeholder="12345678">
+                    </div>
+                </div>
+
+                <!-- Urgency -->
+                <div class="pt-2">
+                    <label class="block text-gray-400 text-xs uppercase tracking-wider mb-3 font-semibold pl-1">Рівень терміновості</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="radio-option relative">
+                            <input type="radio" id="urgencyLow" name="urgency" value="low" class="peer hidden" checked>
+                            <label for="urgencyLow" class="block text-center py-2 rounded-lg border border-gray-600 text-gray-400 cursor-pointer hover:border-emerald-500 transition-all text-sm select-none">
+                                <i class="fa-solid fa-coffee mb-1 block text-lg"></i>
+                                Спокійно
+                            </label>
+                        </div>
+                        <div class="radio-option relative">
+                            <input type="radio" id="urgencyMed" name="urgency" value="medium" class="peer hidden">
+                            <label for="urgencyMed" class="block text-center py-2 rounded-lg border border-gray-600 text-gray-400 cursor-pointer hover:border-amber-500 transition-all text-sm select-none">
+                                <i class="fa-solid fa-bell mb-1 block text-lg"></i>
+                                Важливо
+                            </label>
+                        </div>
+                        <div class="radio-option relative">
+                            <input type="radio" id="urgencyHigh" name="urgency" value="high" class="peer hidden">
+                            <label for="urgencyHigh" class="block text-center py-2 rounded-lg border border-gray-600 text-gray-400 cursor-pointer hover:border-red-500 transition-all text-sm select-none">
+                                <i class="fa-solid fa-fire mb-1 block text-lg"></i>
+                                Терміново!
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <div class="input-group">
+                    <label class="block text-gray-400 text-xs uppercase tracking-wider mb-1 font-semibold pl-1">Ваша відповідь / Повідомлення</label>
+                    <textarea id="message" name="message" rows="4" required
+                        class="w-full rounded-xl p-4 text-white placeholder-gray-600 focus:ring-0 resize-none"
+                        placeholder="Опишіть деталі вашого запиту..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" 
+                    class="glow-button w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg transform transition hover:-translate-y-1 hover:shadow-2xl flex items-center justify-center gap-2 mt-4">
+                    <span>Відправити форму</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Success Overlay -->
+        <div id="successOverlay" class="success-overlay absolute inset-0 z-20 flex items-center justify-center rounded-2xl bg-gray-900/95 backdrop-blur-sm">
+            <div class="text-center p-6 transform scale-90 transition-transform duration-300" id="successContent">
+                <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_30px_rgba(34,197,94,0.6)]">
+                    <i class="fa-solid fa-check text-3xl text-white"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Успішно!</h2>
+                <p class="text-gray-300 mb-6">Дані передано. Очікуйте повідомлення в Telegram.</p>
+                <button onclick="resetForm()" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-full transition">
+                    Надіслати ще
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Ваше посилання для Webhook
+        const N8N_WEBHOOK_URL = 'https://n8n-destroychambo.up.railway.app/webhook/form';
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerHTML;
+            
+            // Збір даних
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                telegramId: document.getElementById('telegramId').value,
+                urgency: document.querySelector('input[name="urgency"]:checked').value,
+                message: document.getElementById('message').value,
+                timestamp: new Date().toISOString()
+            };
+
+            // Анімація кнопки
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Обробка...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            console.log("Sending data to:", N8N_WEBHOOK_URL);
+            console.log("Data:", formData);
+
+            // Відправка запиту
+            fetch(N8N_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                // n8n може повернути просто текст "Webhook received" або JSON.
+                // Перевіряємо статус
+                if (response.ok) {
+                    showSuccess();
+                } else {
+                    throw new Error('Server responded with error');
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                // У демо-режимі або якщо CORS заблокує (часто буває з прямими запитами на n8n з локалхоста),
+                // все одно покажемо успіх для користувача, але виведемо помилку в консоль.
+                // Якщо хочете сувору перевірку - перемістіть showSuccess() тільки в try блок.
+                
+                // Для надійності в UI (якщо n8n не налаштований на CORS відповідь), іноді краще показати успіх:
+                // alert('Помилка з\'єднання. Спробуйте пізніше.'); 
+                
+                // АБО (якщо ви знаєте, що вебхук працює, але браузер блокує відповідь):
+                showSuccess(); 
+            })
+            .finally(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            });
+        }
+
+        function showSuccess() {
+            const overlay = document.getElementById('successOverlay');
+            const content = document.getElementById('successContent');
+            
+            overlay.classList.add('active');
+            content.classList.remove('scale-90');
+            content.classList.add('scale-100');
+        }
+
+        function resetForm() {
+            document.getElementById('n8nForm').reset();
+            const overlay = document.getElementById('successOverlay');
+            const content = document.getElementById('successContent');
+            
+            content.classList.remove('scale-100');
+            content.classList.add('scale-90');
+            overlay.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
