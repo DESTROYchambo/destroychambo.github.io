@@ -90,7 +90,6 @@
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
         }
         
-        /* Прибираємо стрілочки у input type number */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
@@ -128,18 +127,36 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* --- НОВА АНІМАЦІЯ ДЛЯ КНОПКИ БОТА --- */
+        @keyframes botGlow {
+            0%, 100% {
+                box-shadow: 0 0 5px rgba(0, 243, 255, 0.1), inset 0 0 0 rgba(0, 243, 255, 0);
+                border-color: rgba(99, 102, 241, 0.5); /* Стандартний колір бордера */
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 243, 255, 0.5), inset 0 0 10px rgba(0, 243, 255, 0.1);
+                border-color: #00f3ff; /* Яскравий неоновий колір бордера */
+            }
+        }
+
         .bot-button {
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
             text-decoration: none;
+            /* Додаємо анімацію тут: тривалість 3 секунди, нескінченно */
+            animation: botGlow 3s infinite ease-in-out;
         }
+        
         .bot-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
-            background: rgba(79, 70, 229, 0.3);
+            /* При наведенні фіксуємо яскраве світіння, зупиняючи пульсацію */
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.6);
             border-color: #00f3ff;
+            background: rgba(79, 70, 229, 0.3);
+            animation: none; /* Вимикаємо пульсацію при наведенні */
         }
+        
         .bot-button::after {
             content: '';
             position: absolute;
@@ -182,6 +199,7 @@
                     <p class="text-gray-400 text-sm">Система автоматизації n8n</p>
                 </div>
 
+                <!-- КНОПКА З АНІМАЦІЄЮ -->
                 <a href="https://t.me/form_n8nbot" target="_blank" 
                    class="bot-button bg-indigo-900/40 border border-indigo-500/50 rounded-xl p-4 mb-6 flex items-center gap-4 cursor-pointer group">
                     <div class="bg-indigo-600/20 p-3 rounded-full text-neonBlue group-hover:scale-110 transition-transform">
@@ -213,18 +231,15 @@
                         </div>
                     </div>
 
-                    <!-- Оновлене поле Telegram ID з підказкою -->
                     <div class="input-group">
                         <div class="flex justify-between items-end mb-1">
                             <label class="block text-gray-400 text-xs uppercase tracking-wider font-semibold pl-1">Ваш Telegram ID</label>
-                            <!-- Лінк на бота для отримання ID -->
                             <a href="https://t.me/userinfobot" target="_blank" class="text-xs text-neonBlue hover:text-white transition-colors underline decoration-dotted">
                                 <i class="fa-solid fa-circle-question mr-1"></i>Дізнатись свій ID
                             </a>
                         </div>
                         <div class="relative">
                             <span class="absolute left-4 top-3.5 text-gray-500"><i class="fa-solid fa-fingerprint"></i></span>
-                            <!-- type="number" щоб відкривалась цифрова клавіатура на телефоні -->
                             <input type="number" id="telegramId" name="telegramId" required 
                                 class="w-full rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:ring-0"
                                 placeholder="Наприклад: 123456789">
