@@ -3,51 +3,50 @@
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![n8n](https://img.shields.io/badge/n8n-io-%23EA4B71.svg?style=for-the-badge&logo=n8n&logoColor=white)
 
-Сучасна, адаптивна веб-форма для збору заявок клієнтів на послуги автоматизації. Проект реалізовано в стилі **Glassmorphism** з використанням неонових анімацій. Форма розроблена для інтеграції з **n8n** (через Webhook) та передбачає обов'язкову взаємодію з **Telegram ботом**.
+A modern, responsive web form for collecting client requests for automation services. The project is implemented in a **Glassmorphism** style using neon animations. The form is designed for integration with **n8n** (via Webhook) and requires mandatory interaction with a **Telegram bot**.
 
-[Посилання на сторінку](https://destroychambo.github.io/)
+[Page link](https://destroychambo.github.io/)
 
-## Особливості
+## Features
 
-- **Сучасний UI/UX:** Дизайн Dark Mode з ефектом матового скла, градієнтами та фоновими анімаціями.
-- **Адаптивність:** Повна підтримка мобільних пристроїв та десктопів.
-- **Логіка Telegram:** Інтегрована кнопка-нагадування про необхідність відправити `/start` боту перед відправкою форми.
-- **n8n Webhook:** Відправка даних (ПІБ, Telegram ID, Терміновість, Повідомлення) POST-запитом.
-- **UX деталі:** Валідація полів, статус завантаження (loading state) та красиве повідомлення про успішну відправку.
+- **Modern UI/UX:** Dark Mode design with a frosted glass effect, gradients, and background animations.
+- **Responsiveness:** Full support for mobile devices and desktops.
+- **Telegram Logic:** Integrated reminder button about the need to send `/start` to the bot before submitting the form.
+- **n8n Webhook:** Sending data (Full Name, Telegram ID, Urgency, Message) via a POST request.
+- **UX Details:** Field validation, loading state, and a beautiful success message.
 
-## 🛠 Як це працює (Workflow)
+## 🛠 How it works (Workflow)
 
-1.  **Вхід:** Клієнт відкриває веб-сторінку.
-2.  **Активація бота:** Клієнт натискає на анімовану кнопку Telegram, переходить у бот і натискає `/start` (це необхідно для зворотного зв'язку).
-3.  **Заповнення:** Клієнт вводить дані:
-    - Прізвище та Ім'я.
-    - Telegram ID (є посилання на інструмент для його отримання).
-    - Рівень терміновості (Спокійно / Важливо / Терміново).
-    - Опис проблеми.
-4.  **Відправка:** Дані через `fetch` відправляються на Webhook URL та записуються у гугл-таблицю.
-5.  **Успіх:** Клієнт отримує візуальне підтвердження.
+1.  **Entry:** The client opens the web page.
+2.  **Bot Activation:** The client clicks on the animated Telegram button, goes to the bot, and presses `/start` (this is necessary for feedback).
+3.  **Filling out:** The client enters their data:
+    - First and Last Name.
+    - Telegram ID (includes a link to a tool to get it).
+    - Urgency level (Normal / Important / Urgent).
+    - Description of the problem.
+4.  **Submission:** The data is sent via `fetch` to the Webhook URL and recorded in a Google Sheet.
+5.  **Success:** The client receives a visual confirmation.
 
-## 📦 Структура даних (JSON)
+## 📦 Data Structure (JSON)
 
-Форма відправляє на сервер наступний об'єкт:
+The form sends the following object to the server:
 
 ```json
 {
-  "fullName": "Прізвище Ім'я",
+  "fullName": "Last Name First Name",
   "telegramId": "123456789",
   "urgency": "high",  // low | medium | high
-  "message": "Текст проблеми клієнта...",
+  "message": "Text of the client's problem...",
   "timestamp": "2023-10-27T10:00:00.000Z"
 }
 ```
-## Скріншоти роботи
-1. Заповнення даних
+
+## Screenshots
+1. Filling in the data
 <img width="562" height="836" alt="image" src="https://github.com/user-attachments/assets/46a8dcdb-dc67-408e-827c-2f2cf4c66ffe" />
 
-2. Повідомлення у телеграмі
+2. Telegram message
 <img width="832" height="665" alt="image" src="https://github.com/user-attachments/assets/e29f8051-dafc-482c-8abd-9f35374ad00f" />
 
-3. Створений запис у гугл-таблиці
+3. Created record in the Google Sheet
 <img width="993" height="207" alt="image" src="https://github.com/user-attachments/assets/c65d306d-b9c2-45f8-965c-19475bfd10f0" />
-
-   
