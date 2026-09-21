@@ -43,10 +43,11 @@ The form sends the following object to the server:
 
 ## Screenshots
 1. Filling in the data
-<img width="562" height="836" alt="image" src="https://github.com/user-attachments/assets/46a8dcdb-dc67-408e-827c-2f2cf4c66ffe" />
+<img width="521" height="827" alt="image" src="https://github.com/user-attachments/assets/b95194bb-1697-45f6-9a87-c0a4f7f5e02d" />
 
 2. Telegram message
-<img width="832" height="665" alt="image" src="https://github.com/user-attachments/assets/e29f8051-dafc-482c-8abd-9f35374ad00f" />
+<img width="543" height="493" alt="image" src="https://github.com/user-attachments/assets/e9fc418d-2105-444a-96f2-ebea2f311569" />
 
 3. Created record in the Google Sheet
-<img width="993" height="207" alt="image" src="https://github.com/user-attachments/assets/c65d306d-b9c2-45f8-965c-19475bfd10f0" />
+<img width="848" height="97" alt="image" src="https://github.com/user-attachments/assets/39280207-2ec0-4afe-b46a-15b0b3a13d71" />
+
